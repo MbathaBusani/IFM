@@ -8756,11 +8756,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\nj.   amwdaa\\Desktop\\Uncoded_43\\Client\\Client\\Client.csproj",
+      "projectUniqueName": "C:\\Users\\nj.   amwdaa\\Desktop\\New folder (3)\\IFM\\Uncoded_43\\Client\\Client\\Client.csproj",
       "projectName": "Client",
-      "projectPath": "C:\\Users\\nj.   amwdaa\\Desktop\\Uncoded_43\\Client\\Client\\Client.csproj",
+      "projectPath": "C:\\Users\\nj.   amwdaa\\Desktop\\New folder (3)\\IFM\\Uncoded_43\\Client\\Client\\Client.csproj",
       "packagesPath": "C:\\Users\\nj.   amwdaa\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\nj.   amwdaa\\Desktop\\Uncoded_43\\Client\\Client\\obj\\",
+      "outputPath": "C:\\Users\\nj.   amwdaa\\Desktop\\New folder (3)\\IFM\\Uncoded_43\\Client\\Client\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

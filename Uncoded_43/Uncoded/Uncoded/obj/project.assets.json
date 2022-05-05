@@ -3289,11 +3289,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\nj.   amwdaa\\Desktop\\Uncoded_43\\Uncoded\\Uncoded\\Uncoded.csproj",
+      "projectUniqueName": "C:\\Users\\nj.   amwdaa\\Desktop\\New folder (3)\\IFM\\Uncoded_43\\Uncoded\\Uncoded\\Uncoded.csproj",
       "projectName": "Uncoded",
-      "projectPath": "C:\\Users\\nj.   amwdaa\\Desktop\\Uncoded_43\\Uncoded\\Uncoded\\Uncoded.csproj",
+      "projectPath": "C:\\Users\\nj.   amwdaa\\Desktop\\New folder (3)\\IFM\\Uncoded_43\\Uncoded\\Uncoded\\Uncoded.csproj",
       "packagesPath": "C:\\Users\\nj.   amwdaa\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\nj.   amwdaa\\Desktop\\Uncoded_43\\Uncoded\\Uncoded\\obj\\",
+      "outputPath": "C:\\Users\\nj.   amwdaa\\Desktop\\New folder (3)\\IFM\\Uncoded_43\\Uncoded\\Uncoded\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

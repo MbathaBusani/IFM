@@ -17,7 +17,7 @@ namespace Uncoded.Models
         public double C_Price { get; set; }
 
         [Required]
-        public int MaxSubjectLimit { get; set; }
+        public int MaxSubjectLimit { get; set; } 
 
     }
 }

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Uncoded.Data;
 using Uncoded.Models;
 
@@ -73,9 +73,6 @@ namespace Uncoded.Controllers
                 return Ok();  
 
         }
-
-
-
 
         [HttpDelete]
         [Route("{id}")]

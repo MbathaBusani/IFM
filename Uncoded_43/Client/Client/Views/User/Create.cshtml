@@ -4,40 +4,44 @@
     ViewData["Title"] = "Register";
 }
 
-<form method="post" asp-action="Create">
+<form method="post" asp-action="Create" asp-controller="User" >
 
     <div> <h1>Create New Account</h1></div>
+   
 
-    <div class="mb-3" >
-        <label asp-for="Name"></label>
-        <input asp-for="Name" type="text" />
+    <div class="input-group input-group-outline my-3" >
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" type="text" class="form-control" />
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
 
-    <div class="mb-3">
-        <label asp-for="Surname"></label>
-        <input asp-for="Surname" type="text" />
+        <div class="input-group input-group-outline my-3" >
+        <label asp-for="Surname" class="form-label"></label>
+        <input asp-for="Surname" type="text" class="form-control" />
+        <span asp-validation-for="Surname" class="text-danger"></span>
     </div>
 
-    <div class="mb-3">
-        <label asp-for="Institution"></label>
-        <input asp-for="Institution" type="text" />
+    <div class="input-group input-group-outline my-3" >
+        <label asp-for="Institution" class="form-label"></label>
+        <input asp-for="Institution" type="text" class="form-control" />
+        <span asp-validation-for="Institution" class="text-danger"></span>
     </div>
 
-    <div class="mb-3">
-        <label asp-for="Email" ></label>
-        <input asp-for="Email" type="email" />
-        
+        <div class="input-group input-group-outline my-3" >
+        <label asp-for="Email" class="form-label"></label>
+        <input asp-for="Email" type="email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
     </div>
 
-    <div class="mb-3">
-        <label asp-for="Password"></label>
-        <input asp-for="Password" type="password"/>
+    <div class="input-group input-group-outline my-3" >
+        <label asp-for="Password" class="form-label"></label>
+        <input asp-for="Password" type="password" class="form-control" />
+        <span asp-validation-for="Password" class="text-danger"></span>
     </div>
 
-     @*<a asp-action="Create" class="btn btn-primary" asp-controller="User" >Create</a>*@
-     <button type="submit" class="btn btn-primary" ></button>
-    <a asp-action="Index" asp-controller="User">Go back home</a>
+    @*<a asp-action="Create" class="btn btn-primary" asp-controller="User" >Create</a>*@
+     <button type="submit" class="btn btn-primary"  >Register</button>
+    <a asp-action="Index" asp-controller="User" >Go back home</a>
 </form>
 
 
