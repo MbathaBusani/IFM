@@ -1,0 +1,1 @@
+Go to the .json file and change the connection string there. Change only the server: (http://localhost:) to your local server from MSQL 
