@@ -307,7 +307,21 @@ app.get('/subjects/:id', (req, res) => {
     });
 });
 
+app.delete('subjects/delele/:id', (req, res) => {
 
+    let subjectId = req.params.id;
+    let sqlDelete = `DELETE * FROM subject WHERE id = '${subjectId}'`
+
+    db.query(sqlDelete, (err, result) => {
+        if(err) {
+            console.log(err);
+            res.send({message: "Subject could not be deleted."})
+        }else {
+            res.send({message: "Subject deleted successfully."});
+        }
+    });
+
+});
 
 app.listen(3000, () => {
     console.log("Server is listening on port 3000");
