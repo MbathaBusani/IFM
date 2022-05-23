@@ -242,7 +242,70 @@ app.put('/user/activateuser/:id', (req, res) => {
 
 });
 
+//GRADES
 
+app.get('/grades', (req, res) => {
+
+    let sqlGet = `SELECT * FROM grade`;
+    db.query(sqlGet, (err, result) => {
+
+        if(err){
+            res.send({message: "An error occured"});
+        }else {
+            res.send(result);
+        }
+    });
+
+});
+
+app.get('/grades/:id', (req, res) => {
+
+    let description = req.params.id;
+    let sqlGet = `SELECT * FROM grade WHERE description='${description}'`;
+    db.query(sqlGet, (err, result) => {
+
+        if(err){
+            res.send({message: "An error occured"});
+        }else {
+            res.send(result);
+        }
+    });
+
+});
+
+
+app.post('/subject/add/:id', (req, res) => {
+
+    let name = req.body.name;
+    let gradeId = req.params.id;
+
+    let dbInsert = `INSERT INTO subject(name, grade) VALUES('${name}', '${gradeId}')`;
+
+    db.query(dbInsert, (err, result) => {
+        if(err){
+            console.log(err);
+            res.send({message: "Insert was unsuccessful."});
+        }else {
+            res.send({message: "Data inserted successfully"});
+        }
+    });
+});
+
+
+app.get('/subjects/:id', (req, res) => {
+    let gradeId = req.params.id;
+
+    let sqlGet = `SELECT * FROM subject WHERE grade = '${gradeId}'`;
+
+    db.query(sqlGet, (err, result) => {
+        if(err){
+            console.log(err);
+            res.send({message: "Cannot get subjects"});
+        }else {
+            res.send(result);
+        }
+    });
+});
 
 
 app.listen(3000, () => {
