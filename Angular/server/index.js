@@ -63,8 +63,8 @@ app.post('/user/adduser', (req, res) => {
     let institution = req.body.institution; 
 
     console.log("Name: " + name);
-    let sqlInsert = `INSERT INTO user(name, surname, email, password,institution) 
-    VALUES('${name}', '${surname}','${email}', '${password}','${institution}')`;
+    let sqlInsert = `INSERT INTO user(name, surname, email, status, password,institution) 
+    VALUES('${name}', '${surname}','${email}','0', '${password}','${institution}')`;
 
     db.query(sqlInsert, (err, result) => {
         if(err) {
@@ -306,6 +306,7 @@ app.get('/subjects/:id', (req, res) => {
         }
     });
 });
+
 
 
 app.listen(3000, () => {
