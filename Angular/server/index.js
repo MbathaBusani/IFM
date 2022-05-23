@@ -323,6 +323,118 @@ app.delete('subjects/delele/:id', (req, res) => {
 
 });
 
+app.post('packages/create',(req, res) => {
+
+    let grade = req.body.grade; 
+    let description =req.body. description; 
+    let price = req.body.price;
+    let max_subjects = req.body.max_subjects;
+
+
+    let sqlInsert = `INSERT INTO package(grade, description, price, max_subject_limit) VALUES ('${grade}',
+    '${description}', '${price}', '${max_subjects}')`;
+
+    db.query(sqlInsert, (err, result) => {
+        if(err){
+            console.log(err);
+            res.send(err);
+        }else{
+            res.send({message: "Package created successfully."});
+        }
+    })
+
+} );
+
+app.put('/packages/edit/:id', (req, res) => {
+
+    let packId = req.params.id;
+
+    let grade = req.body.grade; 
+    let description =req.body. description; 
+    let price = req.body.price;
+    let max_subjects = req.body.max_subjects;
+
+    let sqlEdit = `UPDATE package SET  grade='${grade}'description='${description}' price=${price} max_subject_limit=${max_subjects} WHERE id = '${packId}'`;
+    db.query(sqlEdit, (err, result) => {
+
+        if(err) {
+            console.log(err);
+        }else {
+            res.send({
+                message: "package updated"
+            })
+        }
+   }); 
+})
+
+app.post('/packages/:id/addsubject', (req, res) => {
+    
+let sqlAdd = `INSERT INTO package_subject()`;
+
+db.query(sqlAdd, (err, result) => {
+
+}); 
+});
+
+app.get('/packages', (req, res) => {
+    let sqlGet = `SELECT * FROM package`;
+
+    db.query(sqlGet, (err, result) => {
+        if(err){
+            console.log(err);
+            res.send({message: "Cannot get package"});
+        }else{
+            res.send(result);
+        }
+
+    }); 
+
+});
+
+//Subjects
+app.post('assessments/create/:id', (req, res) => {
+
+    let subjectId = req.params.id;
+    let name = req.body.name;
+    let term = req.body.term;
+    let total = req.body.total;
+    let term_weighting = req.body.term_weighting;
+    let year_weighting = req.body.year_weighting;
+    
+    let sqlAdd = `INSERT INTO user(name, term, total, term_weighting, year_weighting, subject_id) 
+    VALUES('${name}','${term}','${total}','${term_weighting}','${year_weighting}', '${subject_id}')`;
+
+    db.query(sqlAdd, (err, result) => {
+
+        if(err){
+            res.send({message: "Assessment could not be added."})
+        }else {
+            res.send({message: "Assessment added."})
+        }
+    });
+
+});
+
+app.get('assessments/:id', (req, res) => {
+    let subjectId = req.params.id;
+
+ let sqlGet = `SELECT * FROM assessment WHERE subject_id='${subjectId}'`;
+
+ db.query(sqlGet, (err, result) => {
+    if(err){
+        console.log(err);
+        res.send({message: "Cannot get subjects"});
+    }else{
+        res.send(result);
+    }
+
+}); 
+});
+
+
+
+
+
 app.listen(3000, () => {
     console.log("Server is listening on port 3000");
 })
