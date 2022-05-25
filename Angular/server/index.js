@@ -1,7 +1,11 @@
 const express = require('express'); 
 const cors = require('cors');
+const jwt = require('jsonwebtoken');
 const bodyparser = require('body-parser');
 const mysql = require('mysql');
+const multer = require('multer');
+
+const upload = multer({storage: multer.memoryStorage()});
 
 const db = mysql.createPool({
     host: "localhost",
@@ -147,6 +151,54 @@ app.delete("/user/deleteuser/:id", (req, res) => {
  });
 
 });
+
+
+
+
+function verifyToken(req, res, next) {
+
+    if(!req.headers.authorization){
+        return res.status(401).send('Unauthorized request');
+    }
+
+    let token = req.headers.authorization.split(' ')[1];
+    if(token === 'null'){
+        return res.status(401).send('Unauthorized request');
+    }
+
+    let payload = jwt.verify(token, 'secretKey');
+
+    if(!payload){
+        return res.status(401).send('Unauthorized request');
+ 
+    }
+    req.userId = payload.subject;
+    next();
+}
+
+//User Authentication 
+
+app.post('/login',  (req, res) => {
+
+    let email = req.body.email;
+    let password = req.body.password;
+
+    let sqlQuery = `SELECT * FROM user WHERE email='${email}' AND password='${password}'`;
+
+    db.query(sqlQuery, (err, user) =>{
+
+        if(err){
+            res.status(404).send('Invalid credantials entered. ')
+        }else{
+            let payload = {subject: user.id };
+            let token = jwt.sign(payload, 'secretKey');
+            res.status(200).send({token});
+        }
+
+    })
+
+});
+
 
 
 
@@ -391,8 +443,40 @@ app.get('/packages', (req, res) => {
 
 });
 
+app.get('/packages/:id', (req, res) => {
+    let id = req.params.id;
+    let sqlGet = `SELECT * FROM package WHERE id='${id}'`;
+    console.log(typeof(id));
+    db.query(sqlGet, (err, result) => {
+        if(err){
+            console.log(err);
+            res.send({message: "Cannot get package"});
+        }else{
+            console.log(result);
+            res.send(result);
+        }
+    }); 
+});
+
+app.post('/packages/assign/:id', (req, res) => {
+    
+let packageId = req.params.id;
+let subjectId = req.body.subjectId; //Comes from the form. 
+
+let sqlInsert = `INSERT INTO package_subject(pac_id, sub_id) VALUES('${packageId}','${subjectId}')`;
+
+db.query(sqlInsert, (err, result) => {
+    if(err) {
+        res.send({message:"Assignment was unsuccessful"});
+    }else {
+        res.send({message:"Subjects assigned"});
+    }
+})
+
+});
+
 //Subjects
-app.post('assessments/create/:id', (req, res) => {
+app.post('/assessments/create/:id', (req, res) => {
 
     let subjectId = req.params.id;
     let name = req.body.name;
@@ -415,8 +499,8 @@ app.post('assessments/create/:id', (req, res) => {
 
 });
 
-app.get('assessments/:id', (req, res) => {
-    let subjectId = req.params.id;
+app.get('/assessments/:id', (req, res) => {
+ let subjectId = req.params.id;
 
  let sqlGet = `SELECT * FROM assessment WHERE subject_id='${subjectId}'`;
 
@@ -431,6 +515,27 @@ app.get('assessments/:id', (req, res) => {
 }); 
 });
 
+app.post('/subject/upload',upload.single('document'), (req, res) => {
+
+    //let file = req.file;
+    //let documentName = file.filename;
+    let document = req.file.buffer.toString('base64');
+
+    console.log(req.file, "File From the client.");
+
+    let sqlInsert = `INSERT INTO subject_doc(doc, name) VALUES('${document}','name')`;
+
+    db.query(sqlInsert, (err, result) => {
+        if(err){
+            console.log(err);
+            res.send({message: "An error occured."});
+        }else {
+            
+            res.send({message: "Document Uploaded Successfully"});
+        }
+    });
+
+});
 
 
 
