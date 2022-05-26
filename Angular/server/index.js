@@ -155,27 +155,6 @@ app.delete("/user/deleteuser/:id", (req, res) => {
 
 
 
-function verifyToken(req, res, next) {
-
-    if(!req.headers.authorization){
-        return res.status(401).send('Unauthorized request');
-    }
-
-    let token = req.headers.authorization.split(' ')[1];
-    if(token === 'null'){
-        return res.status(401).send('Unauthorized request');
-    }
-
-    let payload = jwt.verify(token, 'secretKey');
-
-    if(!payload){
-        return res.status(401).send('Unauthorized request');
- 
-    }
-    req.userId = payload.subject;
-    next();
-}
-
 //User Authentication 
 
 app.post('/login',  (req, res) => {
@@ -196,32 +175,6 @@ app.post('/login',  (req, res) => {
         }
 
     })
-
-});
-
-
-
-
-//Subject 
-
-app.post('/subject/savedoc', (req, res) => {
-
-    let document = req.body.doc;
-    
-
-    var sqlInsert = `INSERT INTO subject_doc(doc, name) VALUES('${document}', 'memo')`; 
-
-    db.query(sqlInsert, (err, result) => {
-        if(err) {
-            console.log(err);
-        }else{
-            res.send({
-                message: "File uploaded successufully"
-            });
-        }
-
-    });
-
 
 });
 
@@ -246,36 +199,65 @@ app.get("/user/login", (req, res) => {
 
 
 
-app.post('/supportingdoc/create', (req, res) => {
+app.post('/supportingdoc/create',upload.single('file'),  (req, res) => {
 
-let id = req.body.id;
+let userId = req.body.id;
 let userType = req.body.type;
 let docType = req.body.id;
 let status = 0;
-    
+let document = req.file.buffer.toString('base64');
+let documentName = req.file.originalname;
 
-    var sqlInsert = `INSERT INTO Application(id,User_Type,status,Doc_Type) VALUES('${id}', '${userType}','${status}','${docType}')`; 
+
+console.log(documentName, "File Name From the Client");
+    
+    var sqlInsert = `INSERT INTO Application(user_id,user_type,status,doc_type,doc, doc_name) 
+    VALUES('${userId}', '${userType}','${status}','${docType}', '${document}', '${documentName}')`; 
 
     db.query(sqlInsert, (err, result) => {
         if(err) {
             console.log(err);
+            res.send({
+                message: "Documents could not be uploaded. "
+            });
         }else{
             res.send({
-                message: "File application created successufully"
+                message: "Application successufully sent."
             });
         }
-
     });
-
 
 });
 
 
+
+app.put('/application/savedoc/:id',upload.single('file'), (req, res) => {
+
+    //let file = req.file;
+    //let documentName = file.filename;
+    let document = req.file.buffer.toString('base64');
+
+    let documentName = req.file.originalname;
+
+    console.log(documentName, "File Name From the Client");
+
+    let sqlInsert = `INSERT INTO application(doc, name) VALUES('${document}','name')`;
+
+    db.query(sqlInsert, (err, result) => {
+        if(err){
+            console.log(err);
+            res.send({message: "An error occured."});
+        }else {
+            
+            res.send({message: "Document Uploaded Successfully"});
+        }
+    });
+
+});
+
 app.put('/user/activateuser/:id', (req, res) => {
 
     let userId = req.params.id;
-
-    
 
     let sqlEdit = `UPDATE user SET status = 1 WHERE id = '${userId}'`;
     db.query(sqlEdit, (err, result) => {
@@ -288,10 +270,6 @@ app.put('/user/activateuser/:id', (req, res) => {
             })
         }
    });
-
-   
-
-
 });
 
 //GRADES
@@ -359,7 +337,7 @@ app.get('/subjects/:id', (req, res) => {
     });
 });
 
-app.delete('subjects/delele/:id', (req, res) => {
+app.delete('/subjects/delele/:id', (req, res) => {
 
     let subjectId = req.params.id;
     let sqlDelete = `DELETE * FROM subject WHERE id = '${subjectId}'`
@@ -375,7 +353,7 @@ app.delete('subjects/delele/:id', (req, res) => {
 
 });
 
-app.post('packages/create',(req, res) => {
+app.post('/packages/create',(req, res) => {
 
     let grade = req.body.grade; 
     let description =req.body. description; 
@@ -515,15 +493,18 @@ app.get('/assessments/:id', (req, res) => {
 }); 
 });
 
-app.post('/subject/upload',upload.single('document'), (req, res) => {
+app.post('/subject/upload/:id',upload.single('file'), (req, res) => {
 
     //let file = req.file;
     //let documentName = file.filename;
+    let subjectId = req.params.id;
     let document = req.file.buffer.toString('base64');
 
-    console.log(req.file, "File From the client.");
+    let documentName = req.file.originalname;
 
-    let sqlInsert = `INSERT INTO subject_doc(doc, name) VALUES('${document}','name')`;
+    console.log(documentName, "File Name From the Client");
+
+    let sqlInsert = `INSERT INTO subject_doc(doc, name, subj_id) VALUES('${document}','${documentName}', '${subjectId}')`;
 
     db.query(sqlInsert, (err, result) => {
         if(err){
@@ -537,10 +518,40 @@ app.post('/subject/upload',upload.single('document'), (req, res) => {
 
 });
 
+app.put('/subjects/editdoc/:id', (req, res) => {
 
+let subjId = req.params.id;
+let subjectName = req.body.subjectName;
 
+let sqlUpdate = `UPDATE subject_doc SET name = '${subjectName}' WHERE subj_id = '${subjId}'`;
+
+db.query(sqlUpdate, (err, result) => {
+    if(err){
+        console.log(err);
+        res.send({message: "An error occured."});
+    }else {
+        
+        res.send({message: "Document Uploaded Successfully"});
+    }
+})
+
+});
+
+app.get('/subjectsdocs/:id', (req, res) => {
+    let subjectId = req.params.id;
+
+    let sqlGet = `SELECT * FROM subject_doc WHERE subj_id = '${subjectId}'`;
+
+    db.query(sqlGet, (err, result) => {
+        if(err){
+            console.log(err);
+            res.send({message: "Cannot get subjects"});
+        }else {
+            res.send(result);
+        }
+    });
+})
 
 app.listen(3000, () => {
     console.log("Server is listening on port 3000");
-})
-
+});
